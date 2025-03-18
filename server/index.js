@@ -2,8 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
-// Remove file-server package that's causing the error
-// const fileServer = require('file-server');
 
 const app = express();
 
@@ -17,30 +15,18 @@ app.use(express.json());
 const STUDENTS_DB_FILE = path.join(__dirname, 'students.json');
 const USERS_DB_FILE = path.join(__dirname, 'users.json');
 
-// Create data directory for backups
-const DATA_DIR = path.join(__dirname, 'data');
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-  console.log(`Created data directory: ${DATA_DIR}`);
-}
-
-// Temporary data storage
+// Data storage from JSON files
 let students = [];
 let users = []; 
 
-// Save database functions - MOVED BEFORE loadDatabases to fix reference error
+// Save database functions
 const saveStudentsDatabase = () => {
   try {
     const data = JSON.stringify(students, null, 2);
     fs.writeFileSync(STUDENTS_DB_FILE, data);
-    console.log('Students database saved successfully');
-    
-    // Save a backup copy
-    const backupFile = path.join(DATA_DIR, 'students_backup.json');
-    fs.writeFileSync(backupFile, data);
-    console.log('Students backup saved to', backupFile);
+    console.log('Students saved to file');
   } catch (error) {
-    console.error('Error saving students database:', error);
+    console.error('Error saving students:', error);
   }
 };
 
@@ -48,14 +34,9 @@ const saveUsersDatabase = () => {
   try {
     const data = JSON.stringify(users, null, 2);
     fs.writeFileSync(USERS_DB_FILE, data);
-    console.log('Users database saved successfully');
-    
-    // Save a backup copy
-    const backupFile = path.join(DATA_DIR, 'users_backup.json');
-    fs.writeFileSync(backupFile, data);
-    console.log('Users backup saved to', backupFile);
+    console.log('Users saved to file');
   } catch (error) {
-    console.error('Error saving users database:', error);
+    console.error('Error saving users:', error);
   }
 };
 
@@ -74,13 +55,13 @@ function loadStudentsDatabase() {
     if (fs.existsSync(STUDENTS_DB_FILE)) {
       const data = fs.readFileSync(STUDENTS_DB_FILE, 'utf8');
       students = JSON.parse(data);
-      console.log('Students database loaded:', students.length, 'records');
+      console.log('Students loaded:', students.length, 'records');
     } else {
-      console.log('Students database file not found, starting with empty database');
+      console.log('No students file found, starting with empty list');
       saveStudentsDatabase(); // Create an empty file
     }
   } catch (error) {
-    console.error('Error loading students database:', error);
+    console.error('Error loading students:', error);
   }
 }
 
@@ -90,15 +71,17 @@ function loadUsersDatabase() {
     if (fs.existsSync(USERS_DB_FILE)) {
       const data = fs.readFileSync(USERS_DB_FILE, 'utf8');
       users = JSON.parse(data);
-      console.log('Users database loaded:', users.length, 'records');
+      console.log('Users loaded:', users.length, 'records');
     } else {
-      console.log('Users database file not found, starting with empty database');
+      console.log('No users file found, starting with empty list');
       saveUsersDatabase(); // Create an empty file
     }
   } catch (error) {
-    console.error('Error loading users database:', error);
+    console.error('Error loading users:', error);
   }
 }
+
+// STUDENT ROUTES
 
 // GET - Fetch all students
 app.get('/api/fetchstudents', (req, res) => {
@@ -109,9 +92,9 @@ app.get('/api/fetchstudents', (req, res) => {
 app.post('/api/addstudents', (req, res) => {
   const newStudent = req.body;
   students.push(newStudent);
-  saveStudentsDatabase(); // Save changes to file
+  saveStudentsDatabase();
   res.status(201).json(newStudent);
-  console.log('Student added successfully:', newStudent);
+  console.log('Student added:', newStudent);
 });
 
 // PUT - Edit student
@@ -125,9 +108,9 @@ app.put('/api/editstudent/:idNumber', (req, res) => {
   }
   
   students[index] = updatedStudent;
-  saveStudentsDatabase(); // Save changes to file
+  saveStudentsDatabase();
   res.json(updatedStudent);
-  console.log('Student updated successfully:', updatedStudent);
+  console.log('Student updated');
 });
 
 // DELETE - Delete student
@@ -140,11 +123,11 @@ app.delete('/api/deletestudent/:idNumber', (req, res) => {
   }
   
   students = students.filter(student => student.idNumber !== idNumber);
-  saveStudentsDatabase(); // Save changes to file
-  res.json({ message: 'Student deleted successfully' });
+  saveStudentsDatabase();
+  res.json({ message: 'Student deleted' });
 });
 
-// User Management API Endpoints
+// USER ROUTES
 
 // GET - Fetch all users
 app.get('/api/fetchusers', (req, res) => {
@@ -155,9 +138,9 @@ app.get('/api/fetchusers', (req, res) => {
 app.post('/api/adduser', (req, res) => {
   const newUser = req.body;
   users.push(newUser);
-  saveUsersDatabase(); // Save changes to file
+  saveUsersDatabase();
   res.status(201).json(newUser);
-  console.log('User added successfully:', newUser);
+  console.log('User added');
 });
 
 // PUT - Edit user
@@ -171,9 +154,9 @@ app.put('/api/edituser/:userId', (req, res) => {
   }
   
   users[index] = updatedUser;
-  saveUsersDatabase(); // Save changes to file
+  saveUsersDatabase();
   res.json(updatedUser);
-  console.log('User updated successfully:', updatedUser);
+  console.log('User updated');
 });
 
 // DELETE - Delete user
@@ -186,51 +169,12 @@ app.delete('/api/deleteuser/:userId', (req, res) => {
   }
   
   users = users.filter(user => user.userId !== userId);
-  saveUsersDatabase(); // Save changes to file
-  res.json({ message: 'User deleted successfully' });
-});
-
-// API endpoint to get database information
-app.get('/api/dbinfo', (req, res) => {
-  try {
-    const studentsExists = fs.existsSync(STUDENTS_DB_FILE);
-    const usersExists = fs.existsSync(USERS_DB_FILE);
-    
-    res.json({
-      studentsFile: {
-        path: STUDENTS_DB_FILE,
-        exists: studentsExists,
-        size: studentsExists ? fs.statSync(STUDENTS_DB_FILE).size : 0,
-        records: students.length
-      },
-      usersFile: {
-        path: USERS_DB_FILE,
-        exists: usersExists,
-        size: usersExists ? fs.statSync(USERS_DB_FILE).size : 0,
-        records: users.length
-      },
-      dataDirectory: DATA_DIR
-    });
-  } catch (error) {
-    console.error('Error getting database info:', error);
-    res.status(500).json({ error: 'Failed to get database information' });
-  }
-});
-
-// Serve static files from the data directory
-app.use('/data', express.static(path.join(__dirname, 'data')));
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong!' });
+  saveUsersDatabase();
+  res.json({ message: 'User deleted' });
 });
 
 const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`File storage enabled for database persistence`);
-  console.log(`- Students database: ${STUDENTS_DB_FILE}`);
-  console.log(`- Users database: ${USERS_DB_FILE}`);
-  console.log(`- Backup directory: ${DATA_DIR}`);
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Student Information System API is ready!`);
 });
