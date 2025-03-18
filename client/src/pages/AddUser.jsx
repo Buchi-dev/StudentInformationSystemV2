@@ -38,7 +38,6 @@ const AddUser = () => {
       const response = await axios.get(`${API_BASE_URL}/fetchusers`);
       console.log('Fetched users:', response.data);
       setUsers(response.data);
-      message.success('User data loaded from file system');
       fetchDatabaseInfo(); // Update file stats after fetching users
     } catch (err) {
       console.error('Failed to load users:', err);
@@ -191,9 +190,6 @@ const AddUser = () => {
         <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div>
             <Title level={3}>User Management System</Title>
-            <Text type="secondary">
-              File-based persistence with automatic backup
-            </Text>
           </div>
           <Button 
             type="primary" 
