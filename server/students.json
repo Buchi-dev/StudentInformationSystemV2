@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "idNumber": "w",
+    "firstName": "3",
+    "lastName": "3",
+    "course": "Computer Science",
+    "year": 3
+  }
+]

@@ -205,15 +205,6 @@ const AddUser = () => {
         </Space>
       </Card>
 
-      <Alert
-        message="File System Storage"
-        description="This system uses the Node.js file system to save user data. All records are stored in JSON files with automatic backups created in the data directory."
-        type="info"
-        showIcon
-        icon={<FileOutlined />}
-        style={{ marginBottom: '20px' }}
-      />
-
       {fileStats && (
         <Card style={{ marginBottom: '20px' }}>
           <Space direction="vertical" style={{ width: '100%' }}>
