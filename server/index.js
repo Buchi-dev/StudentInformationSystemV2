@@ -2,7 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
-const fileServer = require('file-server'); // Add file-server package
+// Remove file-server package that's causing the error
+// const fileServer = require('file-server');
 
 const app = express();
 
@@ -12,19 +13,51 @@ app.use(cors());
 // Parse JSON bodies
 app.use(express.json());
 
-// Initialize file server
-const server = fileServer.createServer({
-  root: __dirname,
-  cache: false // Disable caching for development
-});
-
 // Define database file paths
 const STUDENTS_DB_FILE = path.join(__dirname, 'students.json');
 const USERS_DB_FILE = path.join(__dirname, 'users.json');
 
+// Create data directory for backups
+const DATA_DIR = path.join(__dirname, 'data');
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+  console.log(`Created data directory: ${DATA_DIR}`);
+}
+
 // Temporary data storage
 let students = [];
 let users = []; 
+
+// Save database functions - MOVED BEFORE loadDatabases to fix reference error
+const saveStudentsDatabase = () => {
+  try {
+    const data = JSON.stringify(students, null, 2);
+    fs.writeFileSync(STUDENTS_DB_FILE, data);
+    console.log('Students database saved successfully');
+    
+    // Save a backup copy
+    const backupFile = path.join(DATA_DIR, 'students_backup.json');
+    fs.writeFileSync(backupFile, data);
+    console.log('Students backup saved to', backupFile);
+  } catch (error) {
+    console.error('Error saving students database:', error);
+  }
+};
+
+const saveUsersDatabase = () => {
+  try {
+    const data = JSON.stringify(users, null, 2);
+    fs.writeFileSync(USERS_DB_FILE, data);
+    console.log('Users database saved successfully');
+    
+    // Save a backup copy
+    const backupFile = path.join(DATA_DIR, 'users_backup.json');
+    fs.writeFileSync(backupFile, data);
+    console.log('Users backup saved to', backupFile);
+  } catch (error) {
+    console.error('Error saving users database:', error);
+  }
+};
 
 // Load databases
 loadDatabases();
@@ -39,14 +72,9 @@ function loadDatabases() {
 function loadStudentsDatabase() {
   try {
     if (fs.existsSync(STUDENTS_DB_FILE)) {
-      server.serveFile(STUDENTS_DB_FILE, function(err, data) {
-        if (err) {
-          console.error('Error loading students database:', err);
-          return;
-        }
-        students = JSON.parse(data);
-        console.log('Students database loaded:', students.length, 'records');
-      });
+      const data = fs.readFileSync(STUDENTS_DB_FILE, 'utf8');
+      students = JSON.parse(data);
+      console.log('Students database loaded:', students.length, 'records');
     } else {
       console.log('Students database file not found, starting with empty database');
       saveStudentsDatabase(); // Create an empty file
@@ -60,14 +88,9 @@ function loadStudentsDatabase() {
 function loadUsersDatabase() {
   try {
     if (fs.existsSync(USERS_DB_FILE)) {
-      server.serveFile(USERS_DB_FILE, function(err, data) {
-        if (err) {
-          console.error('Error loading users database:', err);
-          return;
-        }
-        users = JSON.parse(data);
-        console.log('Users database loaded:', users.length, 'records');
-      });
+      const data = fs.readFileSync(USERS_DB_FILE, 'utf8');
+      users = JSON.parse(data);
+      console.log('Users database loaded:', users.length, 'records');
     } else {
       console.log('Users database file not found, starting with empty database');
       saveUsersDatabase(); // Create an empty file
@@ -76,37 +99,6 @@ function loadUsersDatabase() {
     console.error('Error loading users database:', error);
   }
 }
-
-// Save database functions
-const saveStudentsDatabase = () => {
-  try {
-    const data = JSON.stringify(students, null, 2);
-    server.saveFile(STUDENTS_DB_FILE, data, function(err) {
-      if (err) {
-        console.error('Error saving students database:', err);
-        return;
-      }
-      console.log('Students database saved successfully');
-    });
-  } catch (error) {
-    console.error('Error preparing students database for save:', error);
-  }
-};
-
-const saveUsersDatabase = () => {
-  try {
-    const data = JSON.stringify(users, null, 2);
-    server.saveFile(USERS_DB_FILE, data, function(err) {
-      if (err) {
-        console.error('Error saving users database:', err);
-        return;
-      }
-      console.log('Users database saved successfully');
-    });
-  } catch (error) {
-    console.error('Error preparing users database for save:', error);
-  }
-};
 
 // GET - Fetch all students
 app.get('/api/fetchstudents', (req, res) => {
@@ -198,6 +190,33 @@ app.delete('/api/deleteuser/:userId', (req, res) => {
   res.json({ message: 'User deleted successfully' });
 });
 
+// API endpoint to get database information
+app.get('/api/dbinfo', (req, res) => {
+  try {
+    const studentsExists = fs.existsSync(STUDENTS_DB_FILE);
+    const usersExists = fs.existsSync(USERS_DB_FILE);
+    
+    res.json({
+      studentsFile: {
+        path: STUDENTS_DB_FILE,
+        exists: studentsExists,
+        size: studentsExists ? fs.statSync(STUDENTS_DB_FILE).size : 0,
+        records: students.length
+      },
+      usersFile: {
+        path: USERS_DB_FILE,
+        exists: usersExists,
+        size: usersExists ? fs.statSync(USERS_DB_FILE).size : 0,
+        records: users.length
+      },
+      dataDirectory: DATA_DIR
+    });
+  } catch (error) {
+    console.error('Error getting database info:', error);
+    res.status(500).json({ error: 'Failed to get database information' });
+  }
+});
+
 // Serve static files from the data directory
 app.use('/data', express.static(path.join(__dirname, 'data')));
 
@@ -210,7 +229,8 @@ app.use((err, req, res, next) => {
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-  console.log(`Using file-server for database operations`);
-  console.log(`Students database file: ${STUDENTS_DB_FILE}`);
-  console.log(`Users database file: ${USERS_DB_FILE}`);
+  console.log(`File storage enabled for database persistence`);
+  console.log(`- Students database: ${STUDENTS_DB_FILE}`);
+  console.log(`- Users database: ${USERS_DB_FILE}`);
+  console.log(`- Backup directory: ${DATA_DIR}`);
 });
