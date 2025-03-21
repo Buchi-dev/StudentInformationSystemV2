@@ -6,7 +6,8 @@ import {
   OrderedListOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
-  UserOutlined
+  UserOutlined,
+  LogoutOutlined
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -15,6 +16,14 @@ const { Sider } = Layout;
 const Sidebar = ({ collapsed, setCollapsed, isMobile }) => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Handle logout
+  const handleLogout = () => {
+    // First clear all auth-related data
+    localStorage.clear(); // Clear all localStorage data
+    // Force a page reload and redirect to login
+    window.location.href = '/login';
+  };
 
   // Simple menu items array
   const menuItems = [
@@ -78,6 +87,8 @@ const Sidebar = ({ collapsed, setCollapsed, isMobile }) => {
           position: 'fixed',
           left: 0,
           zIndex: 1000,
+          display: 'flex',
+          flexDirection: 'column'
         }}
         width={200}
       >
@@ -99,6 +110,23 @@ const Sidebar = ({ collapsed, setCollapsed, isMobile }) => {
           selectedKeys={[location.pathname]}
           items={menuItems}
           onClick={({ key }) => handleMenuClick(key)}
+          style={{ flex: 1 }}
+        />
+
+        {/* Logout Button */}
+        <Menu
+          theme="dark"
+          mode="inline"
+          selectable={false}
+          items={[
+            {
+              key: 'logout',
+              icon: <LogoutOutlined />,
+              label: 'Logout',
+              onClick: handleLogout,
+              style: { marginBottom: '8px' }
+            }
+          ]}
         />
       </Sider>
     </>

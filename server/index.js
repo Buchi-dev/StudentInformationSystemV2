@@ -177,6 +177,29 @@ app.delete('/api/deleteuser/:userId', (req, res) => {
   console.log('User deleted:', deletedUser); // Log deleted user details
 });
 
+// LOGIN ROUTE
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body;
+  
+  const user = users.find(u => u.username === username && u.password === password);
+  
+  if (user) {
+    // Remove password from response for security
+    const { password, ...userWithoutPassword } = user;
+    res.json({
+      success: true,
+      user: userWithoutPassword
+    });
+    console.log('User logged in:', username);
+  } else {
+    res.status(401).json({
+      success: false,
+      message: 'Invalid username or password'
+    });
+    console.log('Failed login attempt for username:', username);
+  }
+});
+
 // Start server
 const PORT = 3000;
 app.listen(PORT, () => {
