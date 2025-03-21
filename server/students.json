@@ -138,12 +138,5 @@
     "lastName": "Santiago",
     "course": "Political Science",
     "year": 3
-  },
-  {
-    "idNumber": "3",
-    "firstName": "3",
-    "lastName": "3",
-    "course": "Computer Science",
-    "year": 1
   }
 ]
