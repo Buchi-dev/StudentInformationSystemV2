@@ -78,5 +78,21 @@
     "middleName": "Lim",
     "username": "Bella",
     "password": "bella123"
+  },
+  {
+    "userId": "3",
+    "firstName": "3",
+    "lastName": "3",
+    "middleName": "3",
+    "username": "33",
+    "password": "test"
+  },
+  {
+    "userId": "3",
+    "firstName": "3",
+    "lastName": "3",
+    "middleName": "3",
+    "username": "3",
+    "password": "3"
   }
 ]

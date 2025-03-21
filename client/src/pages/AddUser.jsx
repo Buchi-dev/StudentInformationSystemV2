@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { Form, Input, Button, Table, Space, Modal, message, Typography, Card, Select, Alert } from 'antd';
-import { DeleteOutlined, EditOutlined, UserAddOutlined, EyeInvisibleOutlined, EyeTwoTone, SaveOutlined, FileOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Table, Space, Modal, message, Typography, Card, Select } from 'antd';
+import { DeleteOutlined, EditOutlined, UserAddOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import axios from 'axios';
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const API_BASE_URL = 'http://localhost:3000/api';
 
@@ -15,21 +15,10 @@ const AddUser = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [dataLoading, setDataLoading] = useState(true);
-  const [fileStats, setFileStats] = useState(null);
 
   useEffect(() => {
     fetchUsers();
-    fetchDatabaseInfo();
   }, []);
-
-  const fetchDatabaseInfo = async () => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/dbinfo`);
-      setFileStats(response.data);
-    } catch (err) {
-      console.error('Failed to fetch database info:', err);
-    }
-  };
 
   const fetchUsers = async () => {
     try {
@@ -38,7 +27,6 @@ const AddUser = () => {
       const response = await axios.get(`${API_BASE_URL}/fetchusers`);
       console.log('Fetched users:', response.data);
       setUsers(response.data);
-      fetchDatabaseInfo(); // Update file stats after fetching users
     } catch (err) {
       console.error('Failed to load users:', err);
       message.error('Could not load users from file system');
@@ -200,21 +188,6 @@ const AddUser = () => {
           </Button>
         </Space>
       </Card>
-
-      {fileStats && (
-        <Card style={{ marginBottom: '20px' }}>
-          <Space direction="vertical" style={{ width: '100%' }}>
-            <Text strong>Database Information:</Text>
-            <Text>
-              Users file: {fileStats.usersFile.records} records 
-              ({Math.round(fileStats.usersFile.size / 1024 * 100) / 100} KB)
-            </Text>
-            <Text>
-              Backup directory: {fileStats.dataDirectory}
-            </Text>
-          </Space>
-        </Card>
-      )}
 
       <Card>
         <Table

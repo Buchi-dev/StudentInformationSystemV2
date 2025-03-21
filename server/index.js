@@ -1,3 +1,4 @@
+// Import dependencies
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
@@ -5,9 +6,9 @@ const path = require('path');
 
 const app = express();
 
+// Middleware setup
 // Enable CORS
 app.use(cors());
-
 // Parse JSON bodies
 app.use(express.json());
 
@@ -19,30 +20,7 @@ const USERS_DB_FILE = path.join(__dirname, 'users.json');
 let students = [];
 let users = []; 
 
-// Save database functions
-const saveStudentsDatabase = () => {
-  try {
-    const data = JSON.stringify(students, null, 2);
-    fs.writeFileSync(STUDENTS_DB_FILE, data);
-    console.log('Students saved to file');
-  } catch (error) {
-    console.error('Error saving students:', error);
-  }
-};
-
-const saveUsersDatabase = () => {
-  try {
-    const data = JSON.stringify(users, null, 2);
-    fs.writeFileSync(USERS_DB_FILE, data);
-    console.log('Users saved to file');
-  } catch (error) {
-    console.error('Error saving users:', error);
-  }
-};
-
-// Load databases
-loadDatabases();
-
+// Database loading functions
 // Function to load both databases
 function loadDatabases() {
   loadStudentsDatabase();
@@ -81,8 +59,31 @@ function loadUsersDatabase() {
   }
 }
 
-// STUDENT ROUTES
+// Database saving functions
+const saveStudentsDatabase = () => {
+  try {
+    const data = JSON.stringify(students, null, 2);
+    fs.writeFileSync(STUDENTS_DB_FILE, data);
+    console.log('Students saved to file');
+  } catch (error) {
+    console.error('Error saving students:', error);
+  }
+};
 
+const saveUsersDatabase = () => {
+  try {
+    const data = JSON.stringify(users, null, 2);
+    fs.writeFileSync(USERS_DB_FILE, data);
+    console.log('Users saved to file');
+  } catch (error) {
+    console.error('Error saving users:', error);
+  }
+};
+
+// Load databases
+loadDatabases();
+
+// STUDENT ROUTES
 // GET - Fetch all students
 app.get('/api/fetchstudents', (req, res) => {
   res.json(students);
@@ -94,7 +95,7 @@ app.post('/api/addstudents', (req, res) => {
   students.push(newStudent);
   saveStudentsDatabase();
   res.status(201).json(newStudent);
-  console.log('Student added:', newStudent);
+  console.log('Student added:', newStudent); // Log added student details
 });
 
 // PUT - Edit student
@@ -110,7 +111,7 @@ app.put('/api/editstudent/:idNumber', (req, res) => {
   students[index] = updatedStudent;
   saveStudentsDatabase();
   res.json(updatedStudent);
-  console.log('Student updated');
+  console.log('Student updated:', updatedStudent); // Log updated student details
 });
 
 // DELETE - Delete student
@@ -122,13 +123,14 @@ app.delete('/api/deletestudent/:idNumber', (req, res) => {
     return res.status(404).json({ message: 'Student not found' });
   }
   
+  const deletedStudent = students[index];
   students = students.filter(student => student.idNumber !== idNumber);
   saveStudentsDatabase();
   res.json({ message: 'Student deleted' });
+  console.log('Student deleted:', deletedStudent); // Log deleted student details
 });
 
 // USER ROUTES
-
 // GET - Fetch all users
 app.get('/api/fetchusers', (req, res) => {
   res.json(users);
@@ -140,7 +142,7 @@ app.post('/api/adduser', (req, res) => {
   users.push(newUser);
   saveUsersDatabase();
   res.status(201).json(newUser);
-  console.log('User added');
+  console.log('User added:', newUser); // Log added user details
 });
 
 // PUT - Edit user
@@ -156,7 +158,7 @@ app.put('/api/edituser/:userId', (req, res) => {
   users[index] = updatedUser;
   saveUsersDatabase();
   res.json(updatedUser);
-  console.log('User updated');
+  console.log('User updated:', updatedUser); // Log updated user details
 });
 
 // DELETE - Delete user
@@ -168,13 +170,15 @@ app.delete('/api/deleteuser/:userId', (req, res) => {
     return res.status(404).json({ message: 'User not found' });
   }
   
+  const deletedUser = users[index];
   users = users.filter(user => user.userId !== userId);
   saveUsersDatabase();
   res.json({ message: 'User deleted' });
+  console.log('User deleted:', deletedUser); // Log deleted user details
 });
 
+// Start server
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log(`Student Information System API is ready!`);
 });
