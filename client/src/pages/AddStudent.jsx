@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Form, Input, Button, Table, Space, Modal, message, Typography, Card } from 'antd';
 import { DeleteOutlined, EditOutlined, UserAddOutlined } from '@ant-design/icons';
 import axios from 'axios';
-import { pageStyles } from '../styles/pages';
+import { addStudentStyles } from '../styles/pages';
 const { Title } = Typography;
 
 const API_BASE_URL = 'http://localhost:3000/api';
@@ -167,9 +167,9 @@ const AddStudent = () => {
   ];
 
   return (
-    <div style={pageStyles.container}>
-      <Card style={pageStyles.headerCard}>
-        <Space style={pageStyles.headerSpace}>
+    <div style={addStudentStyles.container}>
+      <Card style={addStudentStyles.headerCard}>
+        <Space style={addStudentStyles.headerSpace}>
           <Title level={3}>Student Management Sytem</Title>
           <Button 
             type="primary" 
@@ -181,13 +181,13 @@ const AddStudent = () => {
         </Space>
       </Card>
 
-      <Card bodyStyle={pageStyles.tableCard}>
+      <Card bodyStyle={addStudentStyles.tableCard}>
         <Table
           columns={columns}
           dataSource={students}
           rowKey="idNumber"
           pagination={{ pageSize: 10 }}
-          scroll={pageStyles.tableScroll}
+          scroll={addStudentStyles.tableScroll}
         />
       </Card>
 
@@ -196,6 +196,7 @@ const AddStudent = () => {
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null}
+        width={addStudentStyles.modalWidth.width}
       >
         <Form
           form={form}

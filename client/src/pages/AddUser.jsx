@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Form, Input, Button, Table, Space, Modal, message, Typography, Card, Select } from 'antd';
 import { DeleteOutlined, EditOutlined, UserAddOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import axios from 'axios';
-import { pageStyles } from '../styles/pages';
+import { addUserStyles } from '../styles/pages';
 const { Title } = Typography;
 
 const API_BASE_URL = 'http://localhost:3000/api';
@@ -174,9 +174,9 @@ const AddUser = () => {
   ];
 
   return (
-    <div style={pageStyles.container}>
-      <Card style={pageStyles.headerCard}>
-        <Space style={pageStyles.headerSpace}>
+    <div style={addUserStyles.container}>
+      <Card style={addUserStyles.headerCard}>
+        <Space style={addUserStyles.headerSpace}>
           <div>
             <Title level={3}>User Management System</Title>
           </div>
@@ -190,14 +190,14 @@ const AddUser = () => {
         </Space>
       </Card>
 
-      <Card bodyStyle={pageStyles.tableCard}>
+      <Card bodyStyle={addUserStyles.tableCard}>
         <Table
           columns={columns}
           dataSource={users}
           rowKey="userId"
           pagination={{ pageSize: 10 }}
           loading={dataLoading}
-          scroll={pageStyles.tableScroll}
+          scroll={addUserStyles.tableScroll}
         />
       </Card>
 
@@ -206,7 +206,7 @@ const AddUser = () => {
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null}
-        width={pageStyles.modalWidth.width}
+        width={addUserStyles.modalWidth.width}
       >
         <Form
           form={form}

@@ -13,7 +13,7 @@ import {
   DashboardOutlined
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { dashboardStyles } from '../styles/dashboard';
+import { dashboardStyles } from '../styles/pages';
 
 const { Title, Text } = Typography;
 
