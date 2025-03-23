@@ -1,12 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Layout } from 'antd';
+import { Layout, ConfigProvider, theme } from 'antd';
 
 // Import our page components
 import Dashboard from './pages/Dashboard';
 import AddStudent from './pages/AddStudent';
 import Sidebar from './pages/Sidebar';
-import TaskTracker from './pages/TaskTracker';
 import AddUser from './pages/AddUser';
 import Login from './pages/Login';
 
@@ -25,49 +24,64 @@ const App = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   
   return (
-    <Router>
-      <Routes>
-        {/* Login Route - Redirects to home if already logged in */}
-        <Route 
-          path="/login" 
-          element={user ? <Navigate to="/" replace /> : <Login />} 
-        />
-        
-        {/* Protected Routes */}
-        <Route
-          path="/*"
-          element={
-            <ProtectedRoute>
-              <Layout style={{ minHeight: '100vh' }}>
-                <Sidebar />
-                <Layout style={{
-                  marginLeft: 200,
-                  transition: 'margin-left 0.2s'
-                }}>
-                  <Content style={{
-                    margin: '24px 16px',
-                    padding: 24,
-                    minHeight: 280,
-                    background: '#fff',
-                    overflow: 'auto'
-                  }}>
-                    <Routes>
-                      {/* Dashboard as default route */}
-                      <Route index element={<Dashboard />} />
-                      <Route path="/addstudent" element={<AddStudent />} />
-                      <Route path="/tasktracker" element={<TaskTracker />} />
-                      <Route path="/adduser" element={<AddUser />} />
-                      {/* Redirect any unknown routes to Dashboard */}
-                      <Route path="*" element={<Navigate to="/" replace />} />
-                    </Routes>
-                  </Content>
+    <ConfigProvider
+      theme={{
+        algorithm: theme.defaultAlgorithm,
+        token: {
+          colorPrimary: '#1890ff',
+          borderRadius: 6,
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+        },
+      }}
+    >
+      <Router>
+        <Routes>
+          {/* Login Route - Redirects to home if already logged in */}
+          <Route 
+            path="/login" 
+            element={user ? <Navigate to="/" replace /> : <Login />} 
+          />
+          
+          {/* Protected Routes */}
+          <Route
+            path="/*"
+            element={
+              <ProtectedRoute>
+                <Layout style={{ minHeight: '100vh' }}>
+                  <Sidebar />
+                  <Layout 
+                    style={{
+                      marginLeft: 200,
+                      transition: 'all 0.2s ease',
+                      background: '#f5f5f5'
+                    }}
+                  >
+                    <Content
+                      style={{
+                        margin: '24px',
+                        padding: '24px',
+                        minHeight: 280,
+                        background: '#fff',
+                        borderRadius: '8px',
+                        boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)',
+                        overflow: 'auto'
+                      }}
+                    >
+                      <Routes>
+                        <Route index element={<Dashboard />} />
+                        <Route path="/addstudent" element={<AddStudent />} />
+                        <Route path="/adduser" element={<AddUser />} />
+                        <Route path="*" element={<Navigate to="/" replace />} />
+                      </Routes>
+                    </Content>
+                  </Layout>
                 </Layout>
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </Router>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Router>
+    </ConfigProvider>
   );
 };
 

@@ -189,13 +189,14 @@ const AddUser = () => {
         </Space>
       </Card>
 
-      <Card>
+      <Card bodyStyle={{ padding: 0 }}>
         <Table
           columns={columns}
           dataSource={users}
           rowKey="userId"
           pagination={{ pageSize: 10 }}
           loading={dataLoading}
+          scroll={{ y: 'calc(100vh - 300px)' }}
         />
       </Card>
 

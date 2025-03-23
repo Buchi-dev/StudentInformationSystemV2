@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Form, Input, Button, Table, Space, Modal, message, Typography, Card, Select } from 'antd';
 import { DeleteOutlined, EditOutlined, UserAddOutlined } from '@ant-design/icons';
@@ -182,12 +181,13 @@ const AddStudent = () => {
         </Space>
       </Card>
 
-      <Card>
+      <Card bodyStyle={{ padding: 0 }}>
         <Table
           columns={columns}
           dataSource={students}
           rowKey="idNumber"
           pagination={{ pageSize: 10 }}
+          scroll={{ y: 'calc(100vh - 300px)' }}
         />
       </Card>
 

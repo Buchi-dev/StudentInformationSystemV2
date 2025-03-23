@@ -1,46 +1,37 @@
 import React from 'react';
-import { Layout, Menu, Button } from 'antd';
+import { Layout, Menu, Typography } from 'antd';
 import { 
   HomeOutlined, 
   UserAddOutlined, 
-  OrderedListOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
   UserOutlined,
   LogoutOutlined
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const { Sider } = Layout;
+const { Text } = Typography;
 
-const Sidebar = ({ collapsed, setCollapsed, isMobile }) => {
+const Sidebar = ({ collapsed, setCollapsed }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
   // Handle logout
   const handleLogout = () => {
-    // First clear all auth-related data
-    localStorage.clear(); // Clear all localStorage data
-    // Force a page reload and redirect to login
+    localStorage.clear();
     window.location.href = '/login';
   };
 
-  // Simple menu items array
+  // Menu items array with improved organization
   const menuItems = [
     {
       key: '/',
       icon: <HomeOutlined />,
-      label: 'Home',
+      label: 'Dashboard',
     },
     {
       key: '/addstudent',
       icon: <UserAddOutlined />,
       label: 'Add Student',
-    },
-    {
-      key: '/tasktracker',
-      icon: <OrderedListOutlined />,
-      label: 'Task Tracker',
     },
     {
       key: '/adduser',
@@ -52,84 +43,74 @@ const Sidebar = ({ collapsed, setCollapsed, isMobile }) => {
   // Handle menu item click
   const handleMenuClick = (key) => {
     navigate(key);
-    if (isMobile) {
-      setCollapsed(true);
-    }
   };
 
   return (
-    <>
-      {/* Mobile toggle button */}
-      {isMobile && (
-        <Button
-          type="primary"
-          onClick={() => setCollapsed(!collapsed)}
-          style={{
-            position: 'fixed',
-            top: '16px',
-            left: collapsed ? '16px' : '200px',
-            zIndex: 1001,
-          }}
-          icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-        />
-      )}
-      
-      {/* Sidebar */}
-      <Sider
-        collapsible
-        collapsed={collapsed}
-        onCollapse={setCollapsed}
-        collapsedWidth={isMobile ? 0 : 80}
-        trigger={null}
-        style={{
-          background: '#001529',
-          height: '100vh',
-          position: 'fixed',
-          left: 0,
-          zIndex: 1000,
-          display: 'flex',
-          flexDirection: 'column'
-        }}
-        width={200}
-      >
-        {/* Logo/Title */}
-        <div style={{ 
-          height: '64px', 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center',
+    <Sider
+      collapsible
+      collapsed={collapsed}
+      onCollapse={setCollapsed}
+      collapsedWidth={80}
+      trigger={null}
+      style={{
+        background: '#fff',
+        height: '100vh',
+        position: 'fixed',
+        left: 0,
+        zIndex: 1000,
+        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+        display: 'flex',
+        flexDirection: 'column'
+      }}
+      width={200}
+    >
+      <div style={{ 
+        height: '64px', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        borderBottom: '1px solid #f0f0f0',
+        padding: '16px'
+      }}>
+        <Text strong style={{ 
+          color: '#1890ff',
+          fontSize: collapsed ? '18px' : '20px',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis'
         }}>
-          {!collapsed && <h1 style={{ color: 'white', margin: 0 }}>Student System</h1>}
-          {collapsed && !isMobile && <h1 style={{ color: 'white', margin: 0 }}>SS</h1>}
-        </div>
-        
-        {/* Menu */}
-        <Menu
-          theme="dark"
-          mode="inline"
-          selectedKeys={[location.pathname]}
-          items={menuItems}
-          onClick={({ key }) => handleMenuClick(key)}
-          style={{ flex: 1 }}
-        />
+          {collapsed ? 'SIS' : 'Student Info'}
+        </Text>
+      </div>
 
-        {/* Logout Button */}
-        <Menu
-          theme="dark"
-          mode="inline"
-          selectable={false}
-          items={[
-            {
-              key: 'logout',
-              icon: <LogoutOutlined />,
-              label: 'Logout',
-              onClick: handleLogout,
-              style: { marginBottom: '8px' }
-            }
-          ]}
-        />
-      </Sider>
-    </>
+      <Menu
+        mode="inline"
+        selectedKeys={[location.pathname]}
+        style={{ 
+          flex: 1,
+          borderRight: 0
+        }}
+        items={menuItems}
+        onClick={({ key }) => handleMenuClick(key)}
+      />
+
+      <Menu
+        mode="inline"
+        style={{
+          borderRight: 0,
+          borderTop: '1px solid #f0f0f0'
+        }}
+        items={[
+          {
+            key: 'logout',
+            icon: <LogoutOutlined />,
+            label: 'Logout',
+            danger: true,
+            onClick: handleLogout
+          }
+        ]}
+      />
+    </Sider>
   );
 };
 
