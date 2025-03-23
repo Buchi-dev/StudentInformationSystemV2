@@ -6,8 +6,8 @@ A modern web application designed to streamline the management of student record
 
 ### Student Management
 - **Create** new student profiles with personal information
-- **Read** student details and academic records
-- **Update** student information and enrollment status
+- **Read** student details and records
+- **Update** student information
 - **Delete** student records when necessary
 - View student listings and search functionality
 
@@ -114,8 +114,6 @@ The application uses a simple but effective JSON-based file storage system:
 | File | Purpose | Contains |
 |------|---------|----------|
 | `students.json` | Student Records | Personal info, enrollment status |
-| `courses.json` | Course Data | Course details, schedules |
-| `grades.json` | Academic Records | Student grades, assessments |
 | `users.json` | User Accounts | Login credentials, roles |
 
 ## 🔗 API Endpoints
@@ -129,17 +127,14 @@ The application uses a simple but effective JSON-based file storage system:
 - `POST /api/students` - Add new student
 - `GET /api/students/:id` - Get student details
 - `PUT /api/students/:id` - Update student info
+- `DELETE /api/students/:id` - Delete student
 
-### Course Management
-- `GET /api/courses` - List all courses
-- `POST /api/courses` - Create new course
-- `GET /api/courses/:id` - Get course details
-- `PUT /api/courses/:id` - Update course
-
-### Grade Management
-- `GET /api/grades/:studentId` - Get student grades
-- `POST /api/grades` - Submit new grades
-- `PUT /api/grades/:id` - Update grades
+### User Management
+- `GET /api/users` - List all users
+- `POST /api/users` - Create new user
+- `GET /api/users/:id` - Get user details
+- `PUT /api/users/:id` - Update user
+- `DELETE /api/users/:id` - Delete user
 
 ## 🤝 Contributing
 
