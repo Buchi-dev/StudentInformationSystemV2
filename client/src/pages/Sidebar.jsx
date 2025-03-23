@@ -7,40 +7,57 @@ import {
   LogoutOutlined
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { sidebarStyles } from '../styles/sidebar';
 
 const { Sider } = Layout;
 const { Text } = Typography;
 
+/**
+ * Navigation menu items configuration
+ */
+const MENU_ITEMS = [
+  {
+    key: '/',
+    icon: <HomeOutlined />,
+    label: 'Dashboard',
+  },
+  {
+    key: '/addstudent',
+    icon: <UserAddOutlined />,
+    label: 'Add Student',
+  },
+  {
+    key: '/adduser',
+    icon: <UserOutlined />,
+    label: 'User Management',
+  },
+];
+
+/**
+ * Sidebar Component
+ * Main navigation sidebar with collapsible functionality
+ * 
+ * @param {Object} props - Component props
+ * @param {boolean} props.collapsed - Whether the sidebar is collapsed
+ * @param {Function} props.setCollapsed - Function to toggle sidebar collapse state
+ */
 const Sidebar = ({ collapsed, setCollapsed }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Handle logout
+  /**
+   * Handle user logout
+   * Clears local storage and redirects to login page
+   */
   const handleLogout = () => {
     localStorage.clear();
     window.location.href = '/login';
   };
 
-  // Menu items array with improved organization
-  const menuItems = [
-    {
-      key: '/',
-      icon: <HomeOutlined />,
-      label: 'Dashboard',
-    },
-    {
-      key: '/addstudent',
-      icon: <UserAddOutlined />,
-      label: 'Add Student',
-    },
-    {
-      key: '/adduser',
-      icon: <UserOutlined />,
-      label: 'User Management',
-    },
-  ];
-
-  // Handle menu item click
+  /**
+   * Handle menu item click
+   * @param {string} key - Route key to navigate to
+   */
   const handleMenuClick = (key) => {
     navigate(key);
   };
@@ -52,54 +69,35 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       onCollapse={setCollapsed}
       collapsedWidth={80}
       trigger={null}
-      style={{
-        background: '#fff',
-        height: '100vh',
-        position: 'fixed',
-        left: 0,
-        zIndex: 1000,
-        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-        display: 'flex',
-        flexDirection: 'column'
-      }}
+      style={sidebarStyles.sider}
       width={200}
     >
-      <div style={{ 
-        height: '64px', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center',
-        borderBottom: '1px solid #f0f0f0',
-        padding: '16px'
-      }}>
-        <Text strong style={{ 
-          color: '#1890ff',
-          fontSize: collapsed ? '18px' : '20px',
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis'
-        }}>
+      {/* Logo/Brand */}
+      <div style={sidebarStyles.logo}>
+        <Text 
+          strong 
+          style={{
+            ...sidebarStyles.logoText,
+            fontSize: collapsed ? '18px' : '20px'
+          }}
+        >
           {collapsed ? 'SIS' : 'Student Info'}
         </Text>
       </div>
 
+      {/* Main Navigation Menu */}
       <Menu
         mode="inline"
         selectedKeys={[location.pathname]}
-        style={{ 
-          flex: 1,
-          borderRight: 0
-        }}
-        items={menuItems}
+        style={sidebarStyles.mainMenu}
+        items={MENU_ITEMS}
         onClick={({ key }) => handleMenuClick(key)}
       />
 
+      {/* Logout Menu */}
       <Menu
         mode="inline"
-        style={{
-          borderRight: 0,
-          borderTop: '1px solid #f0f0f0'
-        }}
+        style={sidebarStyles.logoutMenu}
         items={[
           {
             key: 'logout',

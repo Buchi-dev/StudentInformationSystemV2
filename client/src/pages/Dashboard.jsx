@@ -10,95 +10,92 @@ import {
   TeamOutlined,
   UsergroupAddOutlined,
   UserOutlined,
-  BookOutlined,
-  DashboardOutlined,
-  SettingOutlined
+  DashboardOutlined
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { dashboardStyles } from '../styles/dashboard';
 
 const { Title, Text } = Typography;
 
+/**
+ * QuickActionCard Component
+ * Displays a single action card with icon and description
+ */
 const QuickActionCard = ({ icon, title, description, onClick, gradient }) => (
   <Card
     hoverable
     onClick={onClick}
     style={{
-      borderRadius: '12px',
-      height: '100%',
-      background: gradient,
-      border: 'none',
-      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-      transition: 'all 0.3s ease'
+      ...dashboardStyles.quickActionCard,
+      background: gradient
     }}
-    bodyStyle={{
-      padding: '24px',
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between'
-    }}
+    bodyStyle={dashboardStyles.quickActionCardBody}
   >
     <div style={{ color: '#fff' }}>
-      {React.cloneElement(icon, { style: { fontSize: '32px', marginBottom: '16px' } })}
-      <Title level={4} style={{ color: '#fff', margin: '0 0 8px 0' }}>
+      {React.cloneElement(icon, { style: dashboardStyles.quickActionIcon })}
+      <Title level={4} style={dashboardStyles.quickActionTitle}>
         {title}
       </Title>
-      <Text style={{ color: 'rgba(255, 255, 255, 0.85)' }}>
+      <Text style={dashboardStyles.quickActionText}>
         {description}
       </Text>
     </div>
   </Card>
 );
 
+/**
+ * Quick actions configuration
+ * Define available quick actions with their properties
+ */
+const QUICK_ACTIONS = [
+  {
+    icon: <UsergroupAddOutlined />,
+    title: 'Add Student',
+    description: 'Register a new student in the system',
+    gradient: 'linear-gradient(135deg, #1890ff 0%, #096dd9 100%)',
+    path: '/addstudent'
+  },
+  {
+    icon: <TeamOutlined />,
+    title: 'Add User',
+    description: 'Create a new user account',
+    gradient: 'linear-gradient(135deg, #52c41a 0%, #389e0d 100%)',
+    path: '/adduser'
+  }
+];
+
+/**
+ * Dashboard Component
+ * Main dashboard view showing welcome message and quick actions
+ */
 const Dashboard = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
 
-  const quickActions = [
-    {
-      icon: <UsergroupAddOutlined />,
-      title: 'Add Student',
-      description: 'Register a new student in the system',
-      gradient: 'linear-gradient(135deg, #1890ff 0%, #096dd9 100%)',
-      onClick: () => navigate('/addstudent')
-    },
-    {
-      icon: <TeamOutlined />,
-      title: 'Add User',
-      description: 'Create a new user account',
-      gradient: 'linear-gradient(135deg, #52c41a 0%, #389e0d 100%)',
-      onClick: () => navigate('/adduser')
-    },
-  ];
+  const formatDate = () => {
+    return new Date().toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
 
   return (
-    <div style={{ padding: '24px' }}>
-      {/* Welcome Section */}
-      <Card
-        bordered={false}
-        style={{
-          marginBottom: '24px',
-          borderRadius: '12px',
-          background: 'linear-gradient(135deg, #1890ff 0%, #096dd9 100%)',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-        }}
-      >
+    <div style={dashboardStyles.container}>
+      {/* Welcome Card */}
+      <Card bordered={false} style={dashboardStyles.welcomeCard}>
         <Row gutter={[24, 24]} align="middle">
           <Col xs={24} md={16}>
             <Space direction="vertical" size={4}>
-              <Text style={{ color: 'rgba(255,255,255,0.85)', fontSize: '16px' }}>
+              <Text style={dashboardStyles.welcomeText}>
                 Welcome back,
               </Text>
-              <Title level={2} style={{ color: '#fff', margin: 0 }}>
+              <Title level={2} style={dashboardStyles.welcomeTitle}>
                 {user.firstName}!
               </Title>
-              <Text style={{ color: 'rgba(255,255,255,0.85)' }}>
-                {new Date().toLocaleDateString('en-US', {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
+              <Text style={dashboardStyles.welcomeDate}>
+                {formatDate()}
               </Text>
             </Space>
           </Col>
@@ -108,10 +105,7 @@ const Dashboard = () => {
       {/* Quick Actions */}
       <Card 
         bordered={false} 
-        style={{ 
-          borderRadius: '12px',
-          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)'
-        }}
+        style={dashboardStyles.actionsCard}
         title={
           <Space>
             <DashboardOutlined />
@@ -120,9 +114,12 @@ const Dashboard = () => {
         }
       >
         <Row gutter={[24, 24]}>
-          {quickActions.map((action, index) => (
+          {QUICK_ACTIONS.map((action, index) => (
             <Col xs={24} sm={12} md={6} key={index}>
-              <QuickActionCard {...action} />
+              <QuickActionCard 
+                {...action} 
+                onClick={() => navigate(action.path)}
+              />
             </Col>
           ))}
         </Row>

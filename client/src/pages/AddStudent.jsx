@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { Form, Input, Button, Table, Space, Modal, message, Typography, Card, Select } from 'antd';
+import { Form, Input, Button, Table, Space, Modal, message, Typography, Card } from 'antd';
 import { DeleteOutlined, EditOutlined, UserAddOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import { pageStyles } from '../styles/pages';
 const { Title } = Typography;
-const { Option } = Select;
 
 const API_BASE_URL = 'http://localhost:3000/api';
 const COURSES = [
@@ -167,9 +167,9 @@ const AddStudent = () => {
   ];
 
   return (
-    <div style={{ padding: '20px' }}>
-      <Card style={{ marginBottom: '20px' }}>
-        <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
+    <div style={pageStyles.container}>
+      <Card style={pageStyles.headerCard}>
+        <Space style={pageStyles.headerSpace}>
           <Title level={3}>Student Management Sytem</Title>
           <Button 
             type="primary" 
@@ -181,13 +181,13 @@ const AddStudent = () => {
         </Space>
       </Card>
 
-      <Card bodyStyle={{ padding: 0 }}>
+      <Card bodyStyle={pageStyles.tableCard}>
         <Table
           columns={columns}
           dataSource={students}
           rowKey="idNumber"
           pagination={{ pageSize: 10 }}
-          scroll={{ y: 'calc(100vh - 300px)' }}
+          scroll={pageStyles.tableScroll}
         />
       </Card>
 
@@ -230,25 +230,17 @@ const AddStudent = () => {
           <Form.Item 
             label="Course" 
             name="course"
-            rules={[{ required: true, message: 'Please select a course' }]}
+            rules={[{ required: true, message: 'Please enter a course' }]}
           >
-            <Select placeholder="Select a course">
-              {COURSES.map(course => (
-                <Option key={course} value={course}>{course}</Option>
-              ))}
-            </Select>
+            <Input placeholder="Enter course name" />
           </Form.Item>
 
           <Form.Item 
             label="Year Level" 
             name="year"
-            rules={[{ required: true, message: 'Please select year level' }]}
+            rules={[{ required: true, message: 'Please enter year level' }]}
           >
-            <Select placeholder="Select year level">
-              {YEAR_LEVELS.map(year => (
-                <Option key={year} value={year}>{year}</Option>
-              ))}
-            </Select>
+            <Input placeholder="Enter year level (1-5)" />
           </Form.Item>
 
           <Form.Item>
