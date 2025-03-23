@@ -16,12 +16,12 @@ const COURSES = [
 const YEAR_LEVELS = [1, 2, 3, 4, 5];
 
 const AddStudent = () => {
-  const [form] = Form.useForm();                                    // Form instance for handling form operations
-  const formRef = useRef(null);                                    // Reference to the form DOM element
-  const [students, setStudents] = useState([]);                    // List of all students
-  const [selectedStudent, setSelectedStudent] = useState(null);     // Currently selected student for editing
-  const [isModalVisible, setIsModalVisible] = useState(false);     // Controls modal visibility
-  const [isEditing, setIsEditing] = useState(false);              // Tracks if we're editing or adding
+  const [form] = Form.useForm();
+  const formRef = useRef(null);
+  const [students, setStudents] = useState([]);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     fetchStudents();
@@ -39,7 +39,6 @@ const AddStudent = () => {
     }
   };
 
-  // Add a new student to the database
   const addStudent = async (values) => {
     try {
       console.log('Adding new student:', values);
@@ -54,7 +53,6 @@ const AddStudent = () => {
     }
   };
 
-  // Update an existing student's information
   const updateStudent = async (values) => {
     try {
       console.log('Updating student:', values);
@@ -68,7 +66,6 @@ const AddStudent = () => {
     }
   };
 
-  // Delete a student from the database
   const deleteStudent = async (id) => {
     try {
       console.log('Deleting student with ID:', id);
@@ -92,7 +89,6 @@ const AddStudent = () => {
     }
   };
 
-  // Focus on the ID input field
   const focusIdField = () => {
     const idField = form.getFieldInstance('idNumber');
     if (idField) {
@@ -101,10 +97,8 @@ const AddStudent = () => {
     }
   };
 
-  // Handle form submission (both add and update)
   const handleSubmit = async (values) => {
     try {
-      console.log('Form submitted with values:', values);
       if (isEditing) {
         await updateStudent(values);
       } else {
@@ -116,22 +110,14 @@ const AddStudent = () => {
     }
   };
 
-  // Modal Control Functions
-  // =====================
-
-  // Show modal for adding a new student
   const showAddModal = () => {
-    console.log('Opening add student modal');
     setIsEditing(false);
     form.resetFields();
     setIsModalVisible(true);
-    // Small delay to ensure modal is rendered before focusing
     setTimeout(focusIdField, 100);
   };
 
-  // Show modal for editing an existing student
   const showEditModal = (student) => {
-    console.log('Opening edit modal for student:', student);
     setIsEditing(true);
     setSelectedStudent(student);
     form.setFieldsValue(student);
@@ -182,13 +168,28 @@ const AddStudent = () => {
       </Card>
 
       <Card bodyStyle={addStudentStyles.tableCard}>
-        <Table
-          columns={columns}
-          dataSource={students}
-          rowKey="idNumber"
-          pagination={{ pageSize: 10 }}
-          scroll={addStudentStyles.tableScroll}
-        />
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '500px' }}>
+          <Table
+            columns={columns}
+            dataSource={students}
+            rowKey="idNumber"
+            pagination={{ 
+              pageSize: 8,
+              position: ['bottomCenter'],
+              showSizeChanger: false,
+              style: { 
+                marginBottom: 0,
+                padding: '16px 0',
+                background: '#fff',
+                borderTop: '1px solid #f0f0f0'
+              }
+            }}
+            style={{
+              width: '100%',
+              flex: 1
+            }}
+          />
+        </div>
       </Card>
 
       <Modal

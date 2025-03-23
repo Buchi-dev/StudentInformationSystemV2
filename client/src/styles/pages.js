@@ -1,8 +1,5 @@
 import { colors, gradients } from './common';
 
-// Styles for pages components
-
-// Shared styles for all pages
 export const pageStyles = {
   container: {
     padding: '20px'
@@ -26,7 +23,6 @@ export const pageStyles = {
   }
 };
 
-// Dashboard specific styles
 export const dashboardStyles = {
   container: {
     padding: '24px'
@@ -79,12 +75,10 @@ export const dashboardStyles = {
   }
 };
 
-// AddStudent specific styles
 export const addStudentStyles = {
   ...pageStyles
 };
 
-// AddUser specific styles
 export const addUserStyles = {
   ...pageStyles
-}; 
+};

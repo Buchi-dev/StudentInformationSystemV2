@@ -8,58 +8,41 @@ class Database {
     }
 
     loadDatabases() {
-        this.loadStudentsDatabase();
-        this.loadUsersDatabase();
+        this.loadDatabase('students', config.STUDENTS_DB_FILE);
+        this.loadDatabase('users', config.USERS_DB_FILE);
     }
 
-    loadStudentsDatabase() {
+    loadDatabase(type, filePath) {
         try {
-            if (fs.existsSync(config.STUDENTS_DB_FILE)) {
-                const data = fs.readFileSync(config.STUDENTS_DB_FILE, 'utf8');
-                this.students = JSON.parse(data);
-                console.log('✅ Students loaded:', this.students.length, 'records');
+            if (fs.existsSync(filePath)) {
+                const data = fs.readFileSync(filePath, 'utf8');
+                this[type] = JSON.parse(data);
+                console.log(`✅ ${type} loaded:`, this[type].length, 'records');
             } else {
-                console.log('📝 No students file found, creating empty database');
-                this.saveStudentsDatabase();
+                console.log(`📝 No ${type} file found, creating empty database`);
+                this.saveDatabase(type, filePath);
             }
         } catch (error) {
-            console.error('❌ Error loading students:', error.message);
+            console.error(`❌ Error loading ${type}:`, error.message);
         }
     }
 
-    loadUsersDatabase() {
+    saveDatabase(type, filePath) {
         try {
-            if (fs.existsSync(config.USERS_DB_FILE)) {
-                const data = fs.readFileSync(config.USERS_DB_FILE, 'utf8');
-                this.users = JSON.parse(data);
-                console.log('✅ Users loaded:', this.users.length, 'records');
-            } else {
-                console.log('📝 No users file found, creating empty database');
-                this.saveUsersDatabase();
-            }
+            const data = JSON.stringify(this[type], null, 2);
+            fs.writeFileSync(filePath, data);
+            console.log(`💾 ${type} saved to file`);
         } catch (error) {
-            console.error('❌ Error loading users:', error.message);
+            console.error(`❌ Error saving ${type}:`, error.message);
         }
     }
 
     saveStudentsDatabase() {
-        try {
-            const data = JSON.stringify(this.students, null, 2);
-            fs.writeFileSync(config.STUDENTS_DB_FILE, data);
-            console.log('💾 Students saved to file');
-        } catch (error) {
-            console.error('❌ Error saving students:', error.message);
-        }
+        this.saveDatabase('students', config.STUDENTS_DB_FILE);
     }
 
     saveUsersDatabase() {
-        try {
-            const data = JSON.stringify(this.users, null, 2);
-            fs.writeFileSync(config.USERS_DB_FILE, data);
-            console.log('💾 Users saved to file');
-        } catch (error) {
-            console.error('❌ Error saving users:', error.message);
-        }
+        this.saveDatabase('users', config.USERS_DB_FILE);
     }
 
     getStudents() {

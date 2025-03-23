@@ -8,9 +8,7 @@ import {
 } from 'antd';
 import { 
   TeamOutlined,
-  UsergroupAddOutlined,
-  UserOutlined,
-  DashboardOutlined
+  UsergroupAddOutlined
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { dashboardStyles } from '../styles/pages';
@@ -108,7 +106,6 @@ const Dashboard = () => {
         style={dashboardStyles.actionsCard}
         title={
           <Space>
-            <DashboardOutlined />
             <Text strong>Quick Actions</Text>
           </Space>
         }

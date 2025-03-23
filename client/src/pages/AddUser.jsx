@@ -191,14 +191,29 @@ const AddUser = () => {
       </Card>
 
       <Card bodyStyle={addUserStyles.tableCard}>
-        <Table
-          columns={columns}
-          dataSource={users}
-          rowKey="userId"
-          pagination={{ pageSize: 10 }}
-          loading={dataLoading}
-          scroll={addUserStyles.tableScroll}
-        />
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '500px' }}>
+          <Table
+            columns={columns}
+            dataSource={users}
+            rowKey="userId"
+            pagination={{ 
+              pageSize: 8,
+              position: ['bottomCenter'],
+              showSizeChanger: false,
+              style: { 
+                marginBottom: 0,
+                padding: '16px 0',
+                background: '#fff',
+                borderTop: '1px solid #f0f0f0'
+              }
+            }}
+            loading={dataLoading}
+            style={{
+              width: '100%',
+              flex: 1
+            }}
+          />
+        </div>
       </Card>
 
       <Modal
