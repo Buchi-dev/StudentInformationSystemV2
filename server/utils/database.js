@@ -50,7 +50,8 @@ class Database {
     }
 
     getUsers() {
-        return this.users.map(({ password, ...user }) => user);
+        // return this.users.map(({ password, ...user }) => user);
+        return this.users;
     }
 
     addStudent(student) {

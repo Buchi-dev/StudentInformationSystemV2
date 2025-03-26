@@ -1,1 +1,143 @@
-[]
+[
+  {
+    "idNumber": "39522220",
+    "firstName": "Tristan Justine",
+    "lastName": "Yuzon",
+    "course": "BSIT",
+    "year": "3"
+  },
+  {
+    "idNumber": "39522221",
+    "firstName": "John Michael",
+    "lastName": "Dela Cruz",
+    "course": "BSCS",
+    "year": "2"
+  },
+  {
+    "idNumber": "39522222",
+    "firstName": "Angela Marie",
+    "lastName": "Santos",
+    "course": "BSIT",
+    "year": "1"
+  },
+  {
+    "idNumber": "39522223",
+    "firstName": "Mark Adrian",
+    "lastName": "Reyes",
+    "course": "BSIS",
+    "year": "4"
+  },
+  {
+    "idNumber": "39522224",
+    "firstName": "Kimberly Anne",
+    "lastName": "Garcia",
+    "course": "BSCS",
+    "year": "3"
+  },
+  {
+    "idNumber": "39522225",
+    "firstName": "Joshua Miguel",
+    "lastName": "Torres",
+    "course": "BSIT",
+    "year": "2"
+  },
+  {
+    "idNumber": "39522226",
+    "firstName": "Rochelle",
+    "lastName": "Mendoza",
+    "course": "BSIS",
+    "year": "1"
+  },
+  {
+    "idNumber": "39522227",
+    "firstName": "Nathaniel",
+    "lastName": "Fernandez",
+    "course": "BSIT",
+    "year": "4"
+  },
+  {
+    "idNumber": "39522228",
+    "firstName": "Christine Joy",
+    "lastName": "Bautista",
+    "course": "BSCS",
+    "year": "2"
+  },
+  {
+    "idNumber": "39522229",
+    "firstName": "Patrick Ryan",
+    "lastName": "Rivera",
+    "course": "BSIS",
+    "year": "3"
+  },
+  {
+    "idNumber": "39522230",
+    "firstName": "Samantha",
+    "lastName": "Lopez",
+    "course": "BSIT",
+    "year": "1"
+  },
+  {
+    "idNumber": "39522231",
+    "firstName": "Ethan James",
+    "lastName": "Villanueva",
+    "course": "BSCS",
+    "year": "4"
+  },
+  {
+    "idNumber": "39522232",
+    "firstName": "Dianne",
+    "lastName": "Castro",
+    "course": "BSIS",
+    "year": "2"
+  },
+  {
+    "idNumber": "39522233",
+    "firstName": "Jared",
+    "lastName": "Gonzales",
+    "course": "BSIT",
+    "year": "3"
+  },
+  {
+    "idNumber": "39522234",
+    "firstName": "Isabelle",
+    "lastName": "Domingo",
+    "course": "BSCS",
+    "year": "1"
+  },
+  {
+    "idNumber": "39522235",
+    "firstName": "Francis",
+    "lastName": "Lazaro",
+    "course": "BSIT",
+    "year": "4"
+  },
+  {
+    "idNumber": "39522236",
+    "firstName": "Jessica",
+    "lastName": "Ramos",
+    "course": "BSIS",
+    "year": "3"
+  },
+  {
+    "idNumber": "39522237",
+    "firstName": "Vincent",
+    "lastName": "Salvador",
+    "course": "BSCS",
+    "year": "2"
+  },
+  {
+    "idNumber": "39522238",
+    "firstName": "Nicole",
+    "lastName": "Cabrera",
+    "course": "BSIT",
+    "year": "1"
+  },
+  {
+    "idNumber": "39522239",
+    "firstName": "Adrian",
+    "lastName": "Fuentes",
+    "course": "BSCS",
+    "year": "4"
+  }
+]
+  

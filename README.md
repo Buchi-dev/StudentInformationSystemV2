@@ -1,6 +1,13 @@
 # Student Information System 📚
 
+![GitHub repo size](https://img.shields.io/github/repo-size/username/StudentInformationSystem?color=blue&style=flat-square)
+![GitHub contributors](https://img.shields.io/github/contributors/username/StudentInformationSystem?color=green&style=flat-square)
+![GitHub stars](https://img.shields.io/github/stars/username/StudentInformationSystem?color=yellow&style=flat-square)
+![GitHub forks](https://img.shields.io/github/forks/username/StudentInformationSystem?color=orange&style=flat-square)
+
 A modern web application designed to streamline the management of student records and user data through CRUD operations (Create, Read, Update, Delete).
+
+![Demo GIF](https://user-images.githubusercontent.com/demo.gif) <!-- Replace with actual GIF URL -->
 
 ## ✨ Key Features
 
