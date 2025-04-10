@@ -1,18 +1,10 @@
 [
   {
-    "userId": "33",
+    "userId": "39522220",
     "firstName": "Tristan Justine",
-    "lastName": "YuzonSss",
+    "lastName": "Yuzon",
     "middleName": "Marcos",
-    "username": "Buchi",
-    "password": "1234"
-  },
-  {
-    "userId": "2",
-    "firstName": "2",
-    "lastName": "2",
-    "middleName": "2",
-    "username": "2shgghi",
-    "password": "2"
+    "username": "admin",
+    "password": "test"
   }
 ]
