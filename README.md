@@ -164,3 +164,159 @@ This project is licensed under the ISC License.
 
 ---
 Made with ❤️ for better educational management
+
+## System Requirements
+
+- Node.js (v14.x or higher)
+- MongoDB (v4.x or higher)
+- npm (v6.x or higher)
+
+## Setup Instructions
+
+### 1. MongoDB Setup
+
+1. Install MongoDB on your system: [MongoDB Installation Guide](https://docs.mongodb.com/manual/installation/)
+2. Start MongoDB service:
+   - Windows: Run MongoDB as a service or use `mongod` command
+   - macOS/Linux: `sudo systemctl start mongod`
+3. Verify MongoDB is running: `mongosh` or using MongoDB Compass
+
+### 2. Server Setup
+
+1. Navigate to the server directory:
+   ```
+   cd server
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   ```
+
+3. Start the server:
+   ```
+   npm run dev
+   ```
+
+4. The API server will run on http://localhost:3000
+
+### 3. Client Setup
+
+1. Open a new terminal and navigate to the client directory:
+   ```
+   cd client
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   ```
+
+3. Start the client:
+   ```
+   npm run dev
+   ```
+
+4. The client application will run on http://localhost:5173
+
+## API Routes
+
+### Student Routes
+
+- `GET /api/fetchstudents` - Get all students
+- `POST /api/addstudents` - Add a new student
+- `PUT /api/editstudent/:idNumber` - Update student information
+- `DELETE /api/deletestudent/:idNumber` - Delete a student
+
+### User Routes
+
+- `GET /api/fetchusers` - Get all users
+- `POST /api/adduser` - Add a new user
+- `PUT /api/edituser/:userId` - Update user information
+- `DELETE /api/deleteuser/:userId` - Delete a user
+- `POST /api/login` - User login
+
+## Data Models
+
+### Student Model
+
+```javascript
+{
+  idNumber: String,  // Required, Unique
+  firstName: String, // Required
+  lastName: String,  // Required
+  middleName: String,
+  course: String,    // Required
+  year: String,      // Required
+  section: String,
+  dateAdded: Date    // Default: current date
+}
+```
+
+### User Model
+
+```javascript
+{
+  userId: String,    // Required, Unique
+  firstName: String, // Required
+  lastName: String,  // Required
+  middleName: String,
+  username: String,  // Required, Unique
+  password: String,  // Required
+  role: String,      // Default: 'user'
+  dateAdded: Date    // Default: current date
+}
+```
+
+## Security Considerations
+
+- The system implements basic password hashing using SHA-256 with salt.
+- For production use, consider upgrading to stronger algorithms like bcrypt or Argon2.
+- Implement JWT-based authentication for better security.
+- Add HTTPS for encrypted communication.
+
+## Future Improvements
+
+- Add more comprehensive data validation
+- Implement role-based access control
+- Add automated tests
+- Add password reset functionality
+
+## MongoDB Setup - Super Simple
+
+This project now uses MongoDB instead of file storage. Here's all you need to know:
+
+### Installation
+1. Download MongoDB from [mongodb.com](https://www.mongodb.com/try/download/community)
+2. Install it following the basic steps
+3. Make sure MongoDB is running before starting the app
+
+### Code Already Set Up
+All database code is already set up and very simple:
+- Connection is made in server/index.js
+- Student and user data stored in MongoDB
+- No complex configuration needed!
+
+### Start Everything
+
+#### Server:
+```
+cd server
+npm install
+npm run dev
+```
+
+#### Client:
+```
+cd client
+npm install
+npm run dev
+```
+
+That's it! Your app is now using MongoDB instead of files.
+
+## Need Help?
+
+If you're new to MongoDB, here are some helpful resources:
+- [MongoDB Basics Tutorial](https://www.mongodb.com/basics)
+- [MongoDB Documentation](https://docs.mongodb.com/)

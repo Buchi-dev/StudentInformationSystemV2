@@ -1,62 +1,54 @@
-const db = require('../utils/database');
+const Student = require('../models/student.model');
 
+// Basic student controller with CRUD operations
 const studentController = {
-    getAllStudents(req, res) {
+    // Get all students
+    getAllStudents: async (req, res) => {
         try {
-            const students = db.getStudents();
+            const students = await Student.find();
             res.json(students);
         } catch (error) {
-            console.error('❌ Error fetching students:', error.message);
-            res.status(500).json({ error: 'Failed to fetch students' });
+            res.status(500).json({ error: error.message });
         }
     },
 
-    addStudent(req, res) {
+    // Add a student
+    addStudent: async (req, res) => {
         try {
-            const newStudent = req.body;
-            const student = db.addStudent(newStudent);
-            console.log('👨‍🎓 Student added:', student.idNumber);
+            const student = new Student(req.body);
+            await student.save();
             res.status(201).json(student);
         } catch (error) {
-            console.error('❌ Error adding student:', error.message);
-            res.status(500).json({ error: 'Failed to add student' });
+            res.status(500).json({ error: error.message });
         }
     },
 
-    updateStudent(req, res) {
+    // Update a student
+    updateStudent: async (req, res) => {
         try {
-            const { idNumber } = req.params;
-            const updatedStudent = req.body;
+            const student = await Student.findOneAndUpdate(
+                { idNumber: req.params.idNumber },
+                req.body,
+                { new: true }
+            );
             
-            const student = db.updateStudent(idNumber, updatedStudent);
-            if (!student) {
-                return res.status(404).json({ message: 'Student not found' });
-            }
-            
-            console.log('✏️ Student updated:', idNumber);
+            if (!student) return res.status(404).json({ message: "Student not found" });
             res.json(student);
         } catch (error) {
-            console.error('❌ Error updating student:', error.message);
-            res.status(500).json({ error: 'Failed to update student' });
+            res.status(500).json({ error: error.message });
         }
     },
 
-    deleteStudent(req, res) {
+    // Delete a student
+    deleteStudent: async (req, res) => {
         try {
-            const { idNumber } = req.params;
-            
-            const success = db.deleteStudent(idNumber);
-            if (!success) {
-                return res.status(404).json({ message: 'Student not found' });
-            }
-            
-            console.log('🗑️ Student deleted:', idNumber);
-            res.json({ message: 'Student deleted successfully' });
+            const student = await Student.findOneAndDelete({ idNumber: req.params.idNumber });
+            if (!student) return res.status(404).json({ message: "Student not found" });
+            res.json({ message: "Student deleted" });
         } catch (error) {
-            console.error('❌ Error deleting student:', error.message);
-            res.status(500).json({ error: 'Failed to delete student' });
+            res.status(500).json({ error: error.message });
         }
     }
-};
+}
 
 module.exports = studentController; 

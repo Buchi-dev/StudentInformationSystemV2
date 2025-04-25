@@ -1,86 +1,80 @@
-const db = require('../utils/database');
+const User = require('../models/user.model');
 
+// Basic user controller with CRUD operations
 const userController = {
-    getAllUsers(req, res) {
+    // Get all users
+    getAllUsers: async (req, res) => {
         try {
-            const users = db.getUsers();
+            const users = await User.find().select('-password');
             res.json(users);
         } catch (error) {
-            console.error('❌ Error fetching users:', error.message);
-            res.status(500).json({ error: 'Failed to fetch users' });
+            res.status(500).json({ error: error.message });
         }
     },
 
-    addUser(req, res) {
+    // Add a user
+    addUser: async (req, res) => {
         try {
-            const newUser = req.body;
-            const user = db.addUser(newUser);
-            console.log('👤 User added:', user.username);
-            res.status(201).json(user);
+            const user = new User(req.body);
+            await user.save();
+            
+            const response = user.toObject();
+            delete response.password;
+            
+            res.status(201).json(response);
         } catch (error) {
-            console.error('❌ Error adding user:', error.message);
-            res.status(500).json({ error: 'Failed to add user' });
+            res.status(500).json({ error: error.message });
         }
     },
 
-    updateUser(req, res) {
+    // Update a user
+    updateUser: async (req, res) => {
         try {
-            const { userId } = req.params;
-            const updatedUser = req.body;
+            const user = await User.findOneAndUpdate(
+                { userId: req.params.userId },
+                req.body,
+                { new: true }
+            ).select('-password');
             
-            const user = db.updateUser(userId, updatedUser);
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
-            }
-            
-            console.log('✏️ User updated:', userId);
+            if (!user) return res.status(404).json({ message: "User not found" });
             res.json(user);
         } catch (error) {
-            console.error('❌ Error updating user:', error.message);
-            res.status(500).json({ error: 'Failed to update user' });
+            res.status(500).json({ error: error.message });
         }
     },
 
-    deleteUser(req, res) {
+    // Delete a user
+    deleteUser: async (req, res) => {
         try {
-            const { userId } = req.params;
-            
-            const success = db.deleteUser(userId);
-            if (!success) {
-                return res.status(404).json({ message: 'User not found' });
-            }
-            
-            console.log('🗑️ User deleted:', userId);
-            res.json({ message: 'User deleted successfully' });
+            const user = await User.findOneAndDelete({ userId: req.params.userId });
+            if (!user) return res.status(404).json({ message: "User not found" });
+            res.json({ message: "User deleted" });
         } catch (error) {
-            console.error('❌ Error deleting user:', error.message);
-            res.status(500).json({ error: 'Failed to delete user' });
+            res.status(500).json({ error: error.message });
         }
     },
 
-    login(req, res) {
+    // Login a user
+    login: async (req, res) => {
         try {
             const { username, password } = req.body;
+            const user = await User.findOne({ username, password });
             
-            const user = db.validateUser(username, password);
-            if (user) {
-                console.log('🔓 User logged in:', username);
-                res.json({
-                    success: true,
-                    user
-                });
-            } else {
-                console.log('🚫 Failed login attempt for username:', username);
-                res.status(401).json({
-                    success: false,
-                    message: 'Invalid username or password'
+            if (!user) {
+                return res.status(401).json({ 
+                    success: false, 
+                    message: "Invalid credentials" 
                 });
             }
+            
+            const userResponse = user.toObject();
+            delete userResponse.password;
+            
+            res.json({ success: true, user: userResponse });
         } catch (error) {
-            console.error('❌ Error during login:', error.message);
-            res.status(500).json({ error: 'Login failed' });
+            res.status(500).json({ error: error.message });
         }
     }
-};
+}
 
 module.exports = userController; 
