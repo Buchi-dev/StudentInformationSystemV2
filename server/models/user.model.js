@@ -9,6 +9,6 @@ const UserSchema = new mongoose.Schema({
     username: String,
     password: String,
     role: String
-})
+}, { collection: "user-data" })
 
-module.exports = mongoose.model("User", UserSchema, "users")
+module.exports = mongoose.model("User", UserSchema)

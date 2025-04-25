@@ -9,6 +9,6 @@ const StudentSchema = new mongoose.Schema({
     course: String,
     year: String,
     section: String
-})
+}, { collection: "student-data" })  
 
-module.exports = mongoose.model("Student", StudentSchema, "students")
+module.exports = mongoose.model("Student", StudentSchema)
